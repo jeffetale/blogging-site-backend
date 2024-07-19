@@ -42,6 +42,16 @@ def create_blog_post(db: Session, blog_post: schemas.BlogPostCreate):
     db.refresh(db_blog_post)
     return db_blog_post
 
+def update_blog_post(db: Session, post_id: int, blog_post: schemas.BlogPostUpdate):
+    db_blog_post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
+    if not db_blog_post:
+        return None
+    for key, value in blog_post.model_dump(exclude_unset=True).items():
+        setattr(db_blog_post, key, value)
+    db.commit()
+    db.refresh(db_blog_post)
+    return db_blog_post
+
 def create_contact_message(db: Session, contact_message: schemas.ContactMessageCreate):
     db_contact_message = models.ContactMessage(**contact_message.model_dump())
     db.add(db_contact_message)

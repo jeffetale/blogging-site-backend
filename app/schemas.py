@@ -1,6 +1,7 @@
 # app/schemas.py
 
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class BlogPostBase(BaseModel):
     title: str
@@ -11,6 +12,11 @@ class BlogPostBase(BaseModel):
 
 class BlogPostCreate(BlogPostBase):
     pass
+
+class BlogPostUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    image_url: Optional[str] = None
 
 class BlogPost(BlogPostBase):
     id: int

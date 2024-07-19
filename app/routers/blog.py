@@ -37,3 +37,10 @@ def read_popular_posts(db: Session = Depends(get_db)):
     popular_posts = crud.get_top_popular_posts(db)
     return popular_posts
 
+@router.put("/blog_posts/{post_id}", response_model=schemas.BlogPost)
+def update_blog_post(post_id: int, blog_post: schemas.BlogPostUpdate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
+    db_blog_post = crud.update_blog_post(db, post_id, blog_post)
+    if db_blog_post is None:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return db_blog_post
+

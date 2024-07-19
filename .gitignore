@@ -1,5 +1,7 @@
 app/test.db
 app/seed.py
+.env
+.key.py
 
 
 

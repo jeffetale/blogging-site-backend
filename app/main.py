@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from . import models
 from .database import engine
-from .routers import blog, contact
+from .routers import blog, contact, users
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
@@ -26,3 +26,4 @@ app.add_middleware(
 
 app.include_router(blog.router, prefix="/api/v1", tags=["blog"]) 
 app.include_router(contact.router, prefix="/api/v1", tags=["contact"])
+app.include_router(users.router, prefix="/api/v1", tags=["users"])

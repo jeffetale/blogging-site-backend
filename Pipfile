@@ -9,6 +9,10 @@ pydantic = "*"
 psycopg2-binary = "*"
 faker = "*"
 alembic = "*"
+passlib = "*"
+python-jose = "*"
+fastapi-users = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

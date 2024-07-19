@@ -1,6 +1,10 @@
+# app/models.py
+
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from app.database import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 class BlogPost(Base):
     __tablename__ = 'blog_posts'
@@ -10,6 +14,7 @@ class BlogPost(Base):
     content = Column(Text)
     category = Column(String, index=True)
     image_url = Column(String)
+    view_count = Column(Integer, default=0)
 
 
 class ContactMessage(Base):

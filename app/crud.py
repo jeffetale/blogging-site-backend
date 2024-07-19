@@ -1,3 +1,5 @@
+# app/crud.py
+
 from sqlalchemy.orm import Session
 from . import models, schemas
 
@@ -20,3 +22,14 @@ def create_contact_message(db: Session, contact_message: schemas.ContactMessageC
     db.commit()
     db.refresh(db_contact_message)
     return db_contact_message
+
+def update_view_count(db: Session, post_id: int):
+    blog_post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
+    if blog_post:
+        blog_post.view_count += 1
+        db.commit()
+        db.refresh(blog_post)
+    return blog_post
+
+def get_top_popular_posts(db: Session, limit: int = 3):
+    return db.query(models.BlogPost).order_by(models.BlogPost.view_count.desc()).limit(limit).all()

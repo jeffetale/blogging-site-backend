@@ -1,3 +1,5 @@
+# app/schemas.py
+
 from pydantic import BaseModel, EmailStr
 
 class BlogPostBase(BaseModel):

@@ -1,3 +1,5 @@
+# app/routers/blog.py
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -22,4 +24,15 @@ def read_blog_post(post_id: int, db: Session = Depends(get_db)):
 def create_blog_post(blog_post: schemas.BlogPostCreate, db: Session = Depends(get_db)):
     return crud.create_blog_post(db=db, blog_post=blog_post)
 
+@router.post("/blog_posts/{post_id}/update_view_count", response_model=schemas.BlogPost)
+def update_view_count(post_id: int, db: Session = Depends(get_db)):
+    blog_post = crud.update_view_count(db, post_id)
+    if blog_post is None:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return blog_post
+
+@router.get("/popular_posts", response_model=List[schemas.BlogPost])
+def read_popular_posts(db: Session = Depends(get_db)):
+    popular_posts = crud.get_top_popular_posts(db)
+    return popular_posts
 

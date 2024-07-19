@@ -69,3 +69,11 @@ def update_view_count(db: Session, post_id: int):
 
 def get_top_popular_posts(db: Session, limit: int = 3):
     return db.query(models.BlogPost).order_by(models.BlogPost.view_count.desc()).limit(limit).all()
+
+def delete_blog_post(db: Session, post_id: int):
+    db_blog_post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
+    if not db_blog_post:
+        return None
+    db.delete(db_blog_post)
+    db.commit()
+    return db_blog_post

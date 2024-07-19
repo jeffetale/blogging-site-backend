@@ -7,6 +7,7 @@ class BlogPostBase(BaseModel):
     content: str
     category: str
     image_url: str
+    view_count: int = 0
 
 class BlogPostCreate(BlogPostBase):
     pass

@@ -10,14 +10,14 @@ def get_blog_post(db: Session, post_id: int):
     return db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
 
 def create_blog_post(db: Session, blog_post: schemas.BlogPostCreate):
-    db_blog_post = models.BlogPost(**blog_post.dict())
+    db_blog_post = models.BlogPost(**blog_post.model_dump())
     db.add(db_blog_post)
     db.commit()
     db.refresh(db_blog_post)
     return db_blog_post
 
 def create_contact_message(db: Session, contact_message: schemas.ContactMessageCreate):
-    db_contact_message = models.ContactMessage(**contact_message.dict())
+    db_contact_message = models.ContactMessage(**contact_message.model_dump())
     db.add(db_contact_message)
     db.commit()
     db.refresh(db_contact_message)

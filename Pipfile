@@ -13,6 +13,8 @@ passlib = "*"
 python-jose = "*"
 fastapi-users = "*"
 python-dotenv = "*"
+bcrypt = "*"
+requests = "*"
 
 [dev-packages]
 

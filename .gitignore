@@ -3,6 +3,11 @@ app/seed.py
 .env
 .key.py
 .tests.py
-
-
-
+app/alembic.ini
+app/migrations
+app/__pycache__
+app/routers/__pycache__
+test_postgres.py
+app/reset_database.py
+Pipfile
+Pipfile.lock

@@ -19,8 +19,10 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.alter_column('blog_posts', 'view_count', server_default='0')
+    # op.alter_column('blog_posts', 'view_count', server_default='0')
+    pass
 
 def downgrade() -> None:
-    op.alter_column('blog_posts', 'view_count', server_default=None)
+    # op.alter_column('blog_posts', 'view_count', server_default=None)
+    pass
 

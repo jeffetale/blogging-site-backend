@@ -14,7 +14,7 @@ class BlogPost(Base):
     content = Column(Text)
     category = Column(String, index=True)
     image_url = Column(String)
-    view_count = Column(Integer, default=0)
+    view_count = Column(Integer, nullable=True, default=0)
 
 
 class ContactMessage(Base):

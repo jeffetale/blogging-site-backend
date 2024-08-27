@@ -2,6 +2,7 @@
 
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 
 class BlogPostBase(BaseModel):
     title: str
@@ -9,6 +10,7 @@ class BlogPostBase(BaseModel):
     category: str
     image_url: str
     view_count: int = 0
+
 
 class BlogPostCreate(BlogPostBase):
     pass
@@ -20,6 +22,10 @@ class BlogPostUpdate(BaseModel):
 
 class BlogPost(BlogPostBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    user_id: int
+
     class Config:
         orm_mode = True
 
@@ -33,6 +39,9 @@ class ContactMessageCreate(ContactMessageBase):
 
 class ContactMessage(ContactMessageBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
     class Config:
         orm_mode = True
 
@@ -45,6 +54,9 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
     class Config:
         orm_mode = True
 

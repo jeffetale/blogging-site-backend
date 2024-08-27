@@ -35,8 +35,8 @@ def get_blog_posts(db: Session, skip: int = 0, limit: int = 1000000):
 def get_blog_post(db: Session, post_id: int):
     return db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
 
-def create_blog_post(db: Session, blog_post: schemas.BlogPostCreate):
-    db_blog_post = models.BlogPost(**blog_post.model_dump())
+def create_blog_post(db: Session, blog_post: schemas.BlogPostCreate, user_id: int):
+    db_blog_post = models.BlogPost(**blog_post.model_dump(), user_id=user_id)
     db.add(db_blog_post)
     db.commit()
     db.refresh(db_blog_post)
@@ -77,3 +77,10 @@ def delete_blog_post(db: Session, post_id: int):
     db.delete(db_blog_post)
     db.commit()
     return db_blog_post
+
+def get_blog_post_by_slug(db: Session, slug: str):
+    return db.query(models.BlogPost).filter(models.BlogPost.slug == slug).first()
+
+def is_post_owner(db: Session, post_id: int, user_id: int):
+    post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id, models.BlogPost.user_id == user_id).first()
+    return post is not None

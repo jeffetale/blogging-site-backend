@@ -23,7 +23,7 @@ def read_blog_post(post_id: int, db: Session = Depends(get_db)):
 
 @router.post("/blog_posts", response_model=schemas.BlogPost)
 def create_blog_post(blog_post: schemas.BlogPostCreate, db: Session = Depends(get_db), current_user: schemas.User = Depends(get_current_user)):
-    return crud.create_blog_post(db=db, blog_post=blog_post)
+    return crud.create_blog_post(db=db, blog_post=blog_post, user_id=current_user.id)
 
 @router.post("/blog_posts/{post_id}/update_view_count", response_model=schemas.BlogPost)
 def update_view_count(post_id: int, db: Session = Depends(get_db)):
@@ -50,4 +50,10 @@ def delete_blog_post(post_id: int, db: Session = Depends(get_db), current_user: 
     if db_blog_post is None:
         raise HTTPException(status_code=404, detail="Blog post not found")
     return db_blog_post
+
+@router.get("/blog_posts/{post_id}/is_owner")
+def check_post_ownership(post_id: int, current_user: schemas.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    is_owner = crud.is_post_owner(db, post_id, current_user.id)
+    return {"is_owner": is_owner}
+
 

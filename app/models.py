@@ -15,6 +15,8 @@ class BlogPost(Base):
     category = Column(String, index=True)
     image_url = Column(String)
     view_count = Column(Integer, nullable=True, default=0)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', back_populates='blog_posts')
 
 
 class ContactMessage(Base):
@@ -34,3 +36,4 @@ class User(Base):
     hashed_password = Column(String)
     created_at =Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
+    blog_posts = relationship('BlogPost', back_populates='user')

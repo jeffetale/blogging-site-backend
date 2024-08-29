@@ -35,8 +35,19 @@ class BlogPostInDB(BlogPostBase):
         orm_mode = True
 
 
-class BlogPost(BlogPostInDB):
-    pass
+# class BlogPost(BlogPostInDB):
+#     pass
+
+
+class BlogPost(BlogPostBase):
+    id: int
+    image_url_small: str
+    image_url_medium: str
+    image_url_large: str
+    user_id: int
+
+    class Config:
+        orm_mode = True
 
 
 class ContactMessageBase(BaseModel):

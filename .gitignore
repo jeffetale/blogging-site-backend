@@ -11,3 +11,4 @@ test_postgres.py
 app/reset_database.py
 Pipfile
 Pipfile.lock
+query_postgres.py

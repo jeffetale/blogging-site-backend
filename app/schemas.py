@@ -44,6 +44,7 @@ class BlogPost(BlogPostBase):
     image_url_large: str
     user_id: int
     summary: str
+    short_summary: str
 
     class Config:
         orm_mode = True
@@ -53,8 +54,23 @@ class BlogPostSummary(BaseModel):
     id: int
     title: str
     summary: str
+    short_summary: str
+    category: str
+    image_url_small: str
+    image_url_medium: str
+    image_url_large: str
+
+    class Config:
+        orm_mode = True
+
+
+class PopularBlogPost(BaseModel):
+    id: int
+    title: str
+    summary: str
     category: str
     image_url_medium: str
+    view_count: int
 
     class Config:
         orm_mode = True

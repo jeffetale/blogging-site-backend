@@ -13,6 +13,7 @@ class BlogPost(Base):
     title = Column(String)
     content = Column(Text)
     summary = Column(Text)
+    short_summary = Column(Text)
     category = Column(String, index=True)
     image_url_small = Column(String)
     image_url_medium = Column(String)

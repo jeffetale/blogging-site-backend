@@ -9,6 +9,7 @@ from .resize_image import process_and_save_image
 import os
 import logging
 from .llm import summarize_content
+from .overview_llm import short_summarized_content
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +66,7 @@ async def create_blog_post(
 
         logger.info("Summarizing blog post content")
         summary = summarize_content(blog_post.content)
+        short_summary = short_summarized_content(blog_post.content)
 
         logger.info("Creating blog post in database")
         db_blog_post = models.BlogPost(
@@ -74,6 +76,7 @@ async def create_blog_post(
             image_url_medium=processed_images[1]["url"],
             image_url_large=processed_images[2]["url"],
             summary=summary,
+            short_summary=short_summary
         )
         db.add(db_blog_post)
         db.commit()

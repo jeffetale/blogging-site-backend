@@ -11,4 +11,3 @@ router = APIRouter()
 def create_contact_message(contact_message: schemas.ContactMessageCreate, db: Session = Depends(get_db)):
     print({"message": "Message received", "data": contact_message})
     return crud.create_contact_message(db=db, contact_message=contact_message)
-

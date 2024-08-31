@@ -6,6 +6,21 @@ name = "pypi"
 [packages]
 fastapi = "*"
 pydantic = "*"
+psycopg2-binary = "*"
+faker = "*"
+alembic = "*"
+passlib = "*"
+python-jose = "*"
+fastapi-users = "*"
+python-dotenv = "*"
+bcrypt = "*"
+requests = "*"
+pandas = "*"
+tabulate = "*"
+openpyxl = "*"
+pillow = "*"
+openai = "*"
+bs4 = "*"
 
 [dev-packages]
 

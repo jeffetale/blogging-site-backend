@@ -19,6 +19,8 @@ pandas = "*"
 tabulate = "*"
 openpyxl = "*"
 pillow = "*"
+openai = "*"
+bs4 = "*"
 
 [dev-packages]
 

@@ -13,13 +13,14 @@ class BlogPostBase(BaseModel):
 
 
 class BlogPostCreate(BlogPostBase):
-    pass 
+    pass
 
 
 class BlogPostUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
     category: Optional[str] = None
+    summary: Optional[str] = None
 
 
 class BlogPostInDB(BlogPostBase):
@@ -30,13 +31,10 @@ class BlogPostInDB(BlogPostBase):
     image_url_small: str
     image_url_medium: str
     image_url_large: str
+    summary: str
 
     class Config:
         orm_mode = True
-
-
-# class BlogPost(BlogPostInDB):
-#     pass
 
 
 class BlogPost(BlogPostBase):
@@ -45,6 +43,18 @@ class BlogPost(BlogPostBase):
     image_url_medium: str
     image_url_large: str
     user_id: int
+    summary: str
+
+    class Config:
+        orm_mode = True
+
+
+class BlogPostSummary(BaseModel):
+    id: int
+    title: str
+    summary: str
+    category: str
+    image_url_medium: str
 
     class Config:
         orm_mode = True

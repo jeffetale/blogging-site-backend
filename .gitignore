@@ -14,3 +14,7 @@ Pipfile.lock
 query_postgres.py
 static
 database_export.xlsx
+.~lock.database_export.xlsx#
+db_manager.py
+pg_backup_restore.py
+postgres.dump

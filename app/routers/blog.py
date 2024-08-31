@@ -16,8 +16,32 @@ router = APIRouter()
 
 @router.get("/blog_posts", response_model=List[schemas.BlogPost])
 def read_blog_posts(skip: int = 0, limit: int = 1000000, db: Session = Depends(get_db)):
+
     blog_posts = crud.get_blog_posts(db, skip=skip, limit=limit)
     return blog_posts
+
+
+@router.get("/blog_posts/summaries", response_model=List[schemas.BlogPostSummary])
+def read_blog_post_summaries(
+    skip: int = 0, limit: int = 1000000, db: Session = Depends(get_db)
+):
+    logger.info(f"Fetching summaries for blog posts. skip={skip}, limit={limit}")
+    try:
+        blog_posts = crud.get_blog_posts(db, skip=skip, limit=limit)
+        summaries = [
+            schemas.BlogPostSummary(
+                id=post.id,
+                title=post.title,
+                summary=post.summary,
+                category=post.category,
+                image_url_medium=post.image_url_medium,
+            )
+            for post in blog_posts
+        ]
+        return summaries
+    except Exception as e:
+        logger.error(f"Error fetching blog post summaries: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/blog_posts/{post_id}", response_model=schemas.BlogPost)

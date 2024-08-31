@@ -12,6 +12,7 @@ class BlogPost(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     content = Column(Text)
+    summary = Column(Text)
     category = Column(String, index=True)
     image_url_small = Column(String)
     image_url_medium = Column(String)

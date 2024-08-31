@@ -8,6 +8,7 @@ from fastapi import UploadFile
 from .resize_image import process_and_save_image
 import os
 import logging
+from .llm import summarize_content
 
 logger = logging.getLogger(__name__)
 
@@ -62,6 +63,9 @@ async def create_blog_post(
         filename = f"{blog_post.title.replace(' ', '_')}_{user_id}{os.path.splitext(image.filename)[1]}"
         processed_images = await process_and_save_image(image, filename)
 
+        logger.info("Summarizing blog post content")
+        summary = summarize_content(blog_post.content)
+
         logger.info("Creating blog post in database")
         db_blog_post = models.BlogPost(
             **blog_post.dict(),
@@ -69,6 +73,7 @@ async def create_blog_post(
             image_url_small=processed_images[0]["url"],
             image_url_medium=processed_images[1]["url"],
             image_url_large=processed_images[2]["url"],
+            summary=summary,
         )
         db.add(db_blog_post)
         db.commit()

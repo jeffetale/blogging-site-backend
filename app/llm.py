@@ -21,11 +21,11 @@ def summarize_content(html_content: str) -> str:
         messages=[
             {
                 "role": "system",
-                "content": "You are a helpful assistant that summarizes blog content in about 100 words.",
+                "content": "You are a helpful assistant that summarizes blog content in about 100 words. Go straight to the point and just give me the output. That is ready to be pulled from the backed to the front end where the user will see the surmarised content. Dont use words like 'Here is a 100-word summary of the blog post' e.t.c to tell me the summary. Just return the reply of the content",
             },
             {
                 "role": "user",
-                "content": f"Summarize the following content in about 100 words. Go straight to the point and just give me the output:\n\n{text_content}",
+                "content": f"{text_content}",
             },
         ],
     )

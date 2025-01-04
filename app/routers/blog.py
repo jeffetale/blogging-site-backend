@@ -1,12 +1,13 @@
 # app/routers/blog.py
 
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, status, Form
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
 from sqlalchemy.orm import Session
 from typing import List
 from .. import crud, schemas
 from ..database import get_db
 from ..auth import get_current_user
 import logging
+from ..models import BlogPost
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ def read_blog_post_summaries(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/blog_posts/{post_id}", response_model=schemas.BlogPost)
+@router.get("/blog_posts/id/{post_id}", response_model=schemas.BlogPost)
 def read_blog_post(post_id: int, db: Session = Depends(get_db)):
     blog_post = crud.get_blog_post(db, post_id=post_id)
     if blog_post is None:
@@ -52,11 +53,12 @@ def read_blog_post(post_id: int, db: Session = Depends(get_db)):
     return blog_post
 
 
-# router.py
-@router.get("/blog_posts/{slug}", response_model=schemas.BlogPost)
-def read_blog_post(slug: str, db: Session = Depends(get_db)):
+@router.get("/blog_posts/slug/{slug}", response_model=schemas.BlogPost)
+def get_blog_post_by_slug(slug: str, db: Session = Depends(get_db)):
+    logger.info(f"Fetching blog post with slug: {slug}")
     blog_post = crud.get_blog_post_by_slug(db, slug=slug)
-    if blog_post is None:
+    if not blog_post:
+        logger.warning(f"No blog post found with slug: {slug}")
         raise HTTPException(status_code=404, detail="Blog post not found")
     return blog_post
 

@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy.orm import Session
 from . import models, schemas
 from passlib.context import CryptContext
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException
 from .resize_image import process_and_save_image
 import os
 import logging
@@ -56,16 +56,6 @@ def get_blog_post(db: Session, post_id: int):
     return db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
 
 
-import os
-import logging
-from fastapi import UploadFile, HTTPException, Depends
-from sqlalchemy.orm import Session
-import models, schemas
-from sqlalchemy import func
-
-logger = logging.getLogger(__name__)
-
-
 async def create_blog_post(
     db: Session, blog_post: schemas.BlogPostCreate, user_id: int, image: UploadFile
 ):
@@ -104,6 +94,13 @@ async def create_blog_post(
         logger.error(f"Error in create_blog_post: {str(e)}")
         db.rollback()
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+def get_blog_post_by_slug(db: Session, slug: str):
+    blog_post = db.query(models.BlogPost).filter(models.BlogPost.slug == slug).first()
+    if not blog_post:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return blog_post
 
 
 def update_blog_post(db: Session, post_id: int, blog_post: schemas.BlogPostUpdate):
@@ -154,11 +151,6 @@ def delete_blog_post(db: Session, post_id: int):
     db.delete(db_blog_post)
     db.commit()
     return db_blog_post
-
-
-def get_blog_post_by_slug(db: Session, slug: str):
-    return db.query(models.BlogPost).filter(models.BlogPost.slug == slug).first()
-
 
 def is_post_owner(db: Session, post_id: int, user_id: int):
     post = (

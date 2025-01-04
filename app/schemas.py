@@ -10,6 +10,7 @@ class BlogPostBase(BaseModel):
     content: str
     category: str
     view_count: int = 0
+    slug: str
 
 
 class BlogPostCreate(BlogPostBase):
@@ -59,6 +60,7 @@ class BlogPostSummary(BaseModel):
     image_url_small: str
     image_url_medium: str
     image_url_large: str
+    slug: str
 
     class Config:
         orm_mode = True
@@ -71,6 +73,7 @@ class PopularBlogPost(BaseModel):
     category: str
     image_url_medium: str
     view_count: int
+    slug: str
 
     class Config:
         orm_mode = True

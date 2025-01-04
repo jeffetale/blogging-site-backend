@@ -13,6 +13,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = ["http://localhost:3000", "http://127.0.0.1:8000"]
+#origins = ["*", "https://2a24-41-90-34-213.ngrok-free.app", "https://e3d1-41-90-34-213.ngrok-free.app"] 
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,8 +22,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Correctly mount the sta# app/main.py
 
 from fastapi import FastAPI
 from . import models

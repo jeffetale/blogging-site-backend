@@ -1,5 +1,4 @@
 import os
-import time
 import json
 from openai import OpenAI
 from bs4 import BeautifulSoup
@@ -23,9 +22,9 @@ def summarize_content(html_content: str) -> str:
         response = client.chat.completions.create(
             extra_headers={
                 "HTTP-Referer": os.getenv(
-                    "MY_SITE_URL", "https://your-default-site.com"
+                    "MY_SITE_URL"
                 ),
-                "X-Title": os.getenv("MY_APP_NAME", "Your Default App Name"),
+                "X-Title": os.getenv("MY_APP_NAME"),
             },
             model="nousresearch/hermes-3-llama-3.1-405b:free",
             messages=[

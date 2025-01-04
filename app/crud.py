@@ -56,6 +56,16 @@ def get_blog_post(db: Session, post_id: int):
     return db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
 
 
+import os
+import logging
+from fastapi import UploadFile, HTTPException, Depends
+from sqlalchemy.orm import Session
+import models, schemas
+from sqlalchemy import func
+
+logger = logging.getLogger(__name__)
+
+
 async def create_blog_post(
     db: Session, blog_post: schemas.BlogPostCreate, user_id: int, image: UploadFile
 ):
@@ -68,7 +78,7 @@ async def create_blog_post(
         summary = summarize_content(blog_post.content)
         short_summary = short_summarized_content(blog_post.content)
 
-        logger.info("Creating blog post in database")
+        # Creating the BlogPost object
         db_blog_post = models.BlogPost(
             **blog_post.dict(),
             user_id=user_id,
@@ -76,17 +86,24 @@ async def create_blog_post(
             image_url_medium=processed_images[1]["url"],
             image_url_large=processed_images[2]["url"],
             summary=summary,
-            short_summary=short_summary
+            short_summary=short_summary,
         )
+
+        # Generate slug before saving
+        db_blog_post.slug = db_blog_post.generate_slug()
+
+        # Add blog post to the database
         db.add(db_blog_post)
         db.commit()
         db.refresh(db_blog_post)
+
         logger.info(f"Blog post created successfully: id={db_blog_post.id}")
         return db_blog_post
+
     except Exception as e:
         logger.error(f"Error in create_blog_post: {str(e)}")
         db.rollback()
-        raise
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 def update_blog_post(db: Session, post_id: int, blog_post: schemas.BlogPostUpdate):

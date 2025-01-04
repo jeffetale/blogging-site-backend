@@ -52,6 +52,15 @@ def read_blog_post(post_id: int, db: Session = Depends(get_db)):
     return blog_post
 
 
+# router.py
+@router.get("/blog_posts/{slug}", response_model=schemas.BlogPost)
+def read_blog_post(slug: str, db: Session = Depends(get_db)):
+    blog_post = crud.get_blog_post_by_slug(db, slug=slug)
+    if blog_post is None:
+        raise HTTPException(status_code=404, detail="Blog post not found")
+    return blog_post
+
+
 @router.post("/blog_posts", response_model=schemas.BlogPost)
 async def create_blog_post(
     title: str = Form(...),

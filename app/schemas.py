@@ -35,7 +35,7 @@ class BlogPostInDB(BlogPostBase):
     summary: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlogPost(BlogPostBase):
@@ -48,7 +48,7 @@ class BlogPost(BlogPostBase):
     short_summary: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class BlogPostSummary(BaseModel):
@@ -63,7 +63,7 @@ class BlogPostSummary(BaseModel):
     slug: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PopularBlogPost(BaseModel):
@@ -76,7 +76,7 @@ class PopularBlogPost(BaseModel):
     slug: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ContactMessageBase(BaseModel):
@@ -93,7 +93,7 @@ class ContactMessage(ContactMessageBase):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserBase(BaseModel):
     email: EmailStr
@@ -108,4 +108,4 @@ class User(UserBase):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True

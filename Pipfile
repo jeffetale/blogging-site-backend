@@ -22,6 +22,7 @@ pillow = "*"
 openai = "*"
 bs4 = "*"
 tenacity = "*"
+python-slugify = "*"
 
 [dev-packages]
 

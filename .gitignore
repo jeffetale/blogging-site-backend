@@ -18,3 +18,4 @@ database_export.xlsx
 db_manager.py
 pg_backup_restore.py
 postgres.dump
+app/add_slugs.py

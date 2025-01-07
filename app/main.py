@@ -14,7 +14,7 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8001",
-    "https://-frontend-domain.vercel.app"  # frontend domain
+    "https://blogging-site-frontend-9oi0c8mv3-jeffetales-projects.vercel.app"  # frontend domain
 ]
 
 app.add_middleware(

@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+.venv/
 app/utils/__pycache__
 app/test.db
 app/seed.py
@@ -22,4 +25,3 @@ pg_backup_restore.py
 postgres.dump
 app/add_slugs.py
 app/migrate_images.py
-.vercel

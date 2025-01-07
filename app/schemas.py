@@ -20,6 +20,10 @@ class BlogPostUpdate(BaseModel):
     category: Optional[str] = None
     summary: Optional[str] = None
 
+
+class SuccessResponse(BaseModel):
+    detail: str
+
 class BlogPostInDB(BlogPostBase):
     id: int
     slug: str

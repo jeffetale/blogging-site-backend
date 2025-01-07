@@ -5,6 +5,7 @@ app/seed.py
 .tests.py
 app/alembic.ini
 app/migrations
+app/update_null_public_ids.py
 app/__pycache__
 app/routers/__pycache__
 test_postgres.py
@@ -19,3 +20,4 @@ db_manager.py
 pg_backup_restore.py
 postgres.dump
 app/add_slugs.py
+app/migrate_images.py

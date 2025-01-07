@@ -143,7 +143,7 @@ def get_top_popular_posts(db: Session, limit: int = 3):
     )
 
 
-async def delete_blog_post(db: Session, post_id: int):
+def delete_blog_post(db: Session, post_id: int):
     db_blog_post = (
         db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
     )
@@ -158,8 +158,8 @@ async def delete_blog_post(db: Session, post_id: int):
 
         db.delete(db_blog_post)
         db.commit()
-        return True
-    return False
+        return schemas.SuccessResponse(detail="Blog post deleted successfully")
+    return schemas.SuccessResponse(detail="Blog post not found")
 
 
 def is_post_owner(db: Session, post_id: int, user_id: int):

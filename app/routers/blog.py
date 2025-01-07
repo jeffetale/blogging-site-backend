@@ -114,7 +114,7 @@ def update_blog_post(
     return db_blog_post
 
 
-@router.delete("/blog_posts/{post_id}", response_model=schemas.BlogPost)
+@router.delete("/blog_posts/{post_id}", response_model=schemas.SuccessResponse)
 def delete_blog_post(
     post_id: int,
     db: Session = Depends(get_db),
@@ -123,7 +123,7 @@ def delete_blog_post(
     db_blog_post = crud.delete_blog_post(db, post_id)
     if db_blog_post is None:
         raise HTTPException(status_code=404, detail="Blog post not found")
-    return db_blog_post
+    return schemas.SuccessResponse(detail="Blog post deleted successfully")
 
 
 @router.get("/blog_posts/{post_id}/is_owner")

@@ -23,6 +23,7 @@ openai = "*"
 bs4 = "*"
 tenacity = "*"
 python-slugify = "*"
+cloudinary = "*"
 
 [dev-packages]
 

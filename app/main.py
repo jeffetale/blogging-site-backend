@@ -7,6 +7,7 @@ from .database import engine
 from .routers import blog, contact, users
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
+import re
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -19,11 +20,10 @@ origins = [
     "https://blogging-site-frontend-gf461iusa-jeffetales-projects.vercel.app",
 ]
 
-# function to validate origins with regex
+# Function to validate origins with regex
 def is_valid_origin(origin: Optional[str]) -> bool:
     if not origin:
         return False
-    import re
     allowed_patterns = [
         r"^https://blogging-site-frontend-[a-zA-Z0-9-]+-jeffetales-projects\.vercel\.app$",
         *[re.escape(o) for o in origins]

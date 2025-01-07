@@ -32,24 +32,5 @@ app.add_middleware(
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-    
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=500,
-        content={"detail": str(exc)}
-    )
-    
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Application is starting up!")
 
-@app.get("/")
-def read_root():
-    logger.debug("Root endpoint was accessed.")
-    return {"message": "Hello, Vercel!"}
-
-app.include_router(blog.router, prefix="/api/v1", tags=["blog"])
-app.include_router(contact.router, prefix="/api/v1", tags=["users"])
-app.include_router(users.router, prefix="/api/v1", tags=["users"])
 

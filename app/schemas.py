@@ -10,12 +10,9 @@ class BlogPostBase(BaseModel):
     content: str
     category: str
     view_count: int = 0
-    slug: str
-
 
 class BlogPostCreate(BlogPostBase):
     pass
-
 
 class BlogPostUpdate(BaseModel):
     title: Optional[str] = None
@@ -23,15 +20,18 @@ class BlogPostUpdate(BaseModel):
     category: Optional[str] = None
     summary: Optional[str] = None
 
-
 class BlogPostInDB(BlogPostBase):
     id: int
+    slug: str
     created_at: datetime
     updated_at: Optional[datetime] = None
     user_id: int
     image_url_small: str
     image_url_medium: str
     image_url_large: str
+    image_public_id_small: Optional[str] = None
+    image_public_id_medium: Optional[str] = None
+    image_public_id_large: Optional[str] = None
     summary: str
 
     class Config:
@@ -40,9 +40,13 @@ class BlogPostInDB(BlogPostBase):
 
 class BlogPost(BlogPostBase):
     id: int
+    slug: str
     image_url_small: str
     image_url_medium: str
     image_url_large: str
+    image_public_id_small: Optional[str] = None
+    image_public_id_medium: Optional[str] = None
+    image_public_id_large: Optional[str] = None
     user_id: int
     summary: str
     short_summary: str
@@ -60,6 +64,9 @@ class BlogPostSummary(BaseModel):
     image_url_small: str
     image_url_medium: str
     image_url_large: str
+    image_public_id_small: Optional[str] = None 
+    image_public_id_medium: Optional[str] = None 
+    image_public_id_large: Optional[str] = None 
     slug: str
 
     class Config:
@@ -72,6 +79,7 @@ class PopularBlogPost(BaseModel):
     summary: str
     category: str
     image_url_medium: str
+    image_public_id_medium: Optional[str] = None
     view_count: int
     slug: str
 

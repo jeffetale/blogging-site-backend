@@ -1,12 +1,10 @@
 # app/crud.py
-import datetime
 
 from sqlalchemy.orm import Session
 from . import models, schemas
 from passlib.context import CryptContext
 from fastapi import UploadFile, HTTPException
-from .resize_image import process_and_save_image
-import os
+from .utils.cloudinary_helper import upload_image, delete_image
 import logging
 from .llm import summarize_content
 from .overview_llm import short_summarized_content
@@ -61,8 +59,8 @@ async def create_blog_post(
 ):
     try:
         logger.info(f"Processing image for blog post: {blog_post.title}")
-        filename = f"{blog_post.title.replace(' ', '_')}_{user_id}{os.path.splitext(image.filename)[1]}"
-        processed_images = await process_and_save_image(image, filename)
+        filename = f"{blog_post.title.replace(' ', '_')}_{user_id}"
+        processed_images = await upload_image(image, filename)
 
         logger.info("Summarizing blog post content")
         summary = summarize_content(blog_post.content)
@@ -70,17 +68,20 @@ async def create_blog_post(
 
         # Creating the BlogPost object
         db_blog_post = models.BlogPost(
-            **blog_post.dict(),
+            **blog_post.model_dump(),
             user_id=user_id,
             image_url_small=processed_images[0]["url"],
             image_url_medium=processed_images[1]["url"],
             image_url_large=processed_images[2]["url"],
+            image_public_id_small=f"{filename}_small",
+            image_public_id_medium=f"{filename}_medium",
+            image_public_id_large=f"{filename}_large",
             summary=summary,
             short_summary=short_summary,
         )
 
         # Generate slug before saving
-        db_blog_post.slug = db_blog_post.generate_slug()
+        db_blog_post.slug = db_blog_post.generate_slug(db)
 
         # Add blog post to the database
         db.add(db_blog_post)
@@ -142,15 +143,24 @@ def get_top_popular_posts(db: Session, limit: int = 3):
     )
 
 
-def delete_blog_post(db: Session, post_id: int):
+async def delete_blog_post(db: Session, post_id: int):
     db_blog_post = (
         db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
     )
-    if not db_blog_post:
-        return None
-    db.delete(db_blog_post)
-    db.commit()
-    return db_blog_post
+    if db_blog_post:
+        # Delete images from Cloudinary
+        for public_id in [
+            db_blog_post.image_public_id_small,
+            db_blog_post.image_public_id_medium,
+            db_blog_post.image_public_id_large,
+        ]:
+            delete_image(public_id)
+
+        db.delete(db_blog_post)
+        db.commit()
+        return True
+    return False
+
 
 def is_post_owner(db: Session, post_id: int, user_id: int):
     post = (

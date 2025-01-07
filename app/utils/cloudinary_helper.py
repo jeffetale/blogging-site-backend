@@ -5,53 +5,42 @@ import cloudinary.uploader
 from fastapi import UploadFile, HTTPException
 import io
 from typing import List
-from PIL import Image
 from dotenv import load_dotenv
 import os
 
-# Load environment variables
 load_dotenv()
 
-# Get environment variables
 CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
 API_KEY = os.getenv("CLOUDINARY_API_KEY")
 API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
 
-# Validate environment variables
-if not all([CLOUD_NAME, API_KEY, API_SECRET]):
-    raise ValueError(
-        "Missing Cloudinary credentials. Please check your .env file contains: "
-        "CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET"
-    )
-
-# Configure Cloudinary
 cloudinary.config(
     cloud_name=CLOUD_NAME.strip(),
     api_key=API_KEY.strip(),
     api_secret=API_SECRET.strip(),
 )
 
+try:
+    from PIL import Image
+except ImportError:
+    # Fallback for environments where PIL isn't available
+    Image = None
+    print("WARNING: PIL not available, image processing will be limited")
 
 async def upload_image(file: UploadFile, filename: str) -> List[dict]:
     try:
+        # Get the raw content
+        content = await file.read()
+
+        # Direct upload to Cloudinary without PIL processing
+        processed_images = []
         sizes = [
             {"width": 300, "height": 200, "suffix": "small"},
             {"width": 600, "height": 400, "suffix": "medium"},
             {"width": 1200, "height": 800, "suffix": "large"},
         ]
 
-        # Handle both file-like objects and raw content
-        if hasattr(file, "read") and callable(file.read):
-            content = await file.read()
-        else:
-            content = file.file  # Use the content directly if already read
-
-        image = Image.open(io.BytesIO(content))
-
-        processed_images = []
-
         for size in sizes:
-            # Create transformation options for Cloudinary
             transformation = {
                 "width": size["width"],
                 "height": size["height"],
@@ -59,7 +48,6 @@ async def upload_image(file: UploadFile, filename: str) -> List[dict]:
                 "quality": "auto",
             }
 
-            # Upload to Cloudinary with the specific transformation
             try:
                 upload_result = cloudinary.uploader.upload(
                     content,
@@ -67,17 +55,15 @@ async def upload_image(file: UploadFile, filename: str) -> List[dict]:
                     transformation=transformation,
                 )
 
-                processed_images.append(
-                    {
-                        "url": upload_result["secure_url"],
-                        "width": size["width"],
-                        "height": size["height"],
-                    }
-                )
+                processed_images.append({
+                    "url": upload_result["secure_url"],
+                    "width": size["width"],
+                    "height": size["height"],
+                })
             except Exception as e:
                 raise HTTPException(
                     status_code=500,
-                    detail=f"Error uploading image to Cloudinary: {str(e)}",
+                    detail=f"Error uploading image to Cloudinary: {str(e)}"
                 )
 
         return processed_images

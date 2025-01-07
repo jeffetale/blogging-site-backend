@@ -25,3 +25,4 @@ pg_backup_restore.py
 postgres.dump
 app/add_slugs.py
 app/migrate_images.py
+.git

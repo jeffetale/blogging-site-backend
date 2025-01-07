@@ -6,10 +6,6 @@ from . import models
 from .database import engine
 from .routers import blog, contact, users
 from fastapi.middleware.cors import CORSMiddleware
-import logging
-
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
-logger = logging.getLogger(__name__)
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
@@ -33,4 +29,7 @@ app.add_middleware(
 async def root():
     return {"message": "Hello World"}
 
+app.include_router(blog.router, prefix="/api/v1", tags=["blog"])
+app.include_router(contact.router, prefix="/api/v1", tags=["users"])
+app.include_router(users.router, prefix="/api/v1", tags=["users"])
 

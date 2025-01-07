@@ -1,3 +1,5 @@
+venv
+requirements.txt.bak
 app/utils/__pycache__
 app/test.db
 app/seed.py
@@ -23,3 +25,5 @@ postgres.dump
 app/add_slugs.py
 app/migrate_images.py
 .vercel
+dependency_tree.png
+test_api

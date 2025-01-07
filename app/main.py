@@ -14,7 +14,7 @@ origins = [
     "http://localhost:3000",
     "http://127.0.0.1:8000",
     "http://localhost:8001",
-    "https://blogging-site-frontend.vercel.app"
+    "https://blogging-site-frontend.vercel.app",
     "https://blogging-site-frontend-gf461iusa-jeffetales-projects.vercel.app",
 ]
 

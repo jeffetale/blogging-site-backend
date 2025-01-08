@@ -1,6 +1,6 @@
 # app/routers/blog.py
 
-from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form
+from fastapi import APIRouter, Depends, HTTPException, File, UploadFile, Form, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 from .. import crud, schemas
@@ -65,6 +65,7 @@ def get_blog_post_by_slug(slug: str, db: Session = Depends(get_db)):
 
 @router.post("/blog_posts", response_model=schemas.BlogPost)
 async def create_blog_post(
+    background_tasks: BackgroundTasks,
     title: str = Form(...),
     content: str = Form(...),
     category: str = Form(...),
@@ -77,9 +78,14 @@ async def create_blog_post(
         blog_post = schemas.BlogPostCreate(
             title=title, content=content, category=category
         )
+        # Create post first
         created_post = await crud.create_blog_post(
             db=db, blog_post=blog_post, user_id=current_user.id, image=image
         )
+
+        # Add summary generation to background tasks
+        background_tasks.add_task(crud.generate_summaries, db, created_post.id)
+
         logger.info(f"Successfully created blog post with id: {created_post.id}")
         return created_post
     except Exception as e:

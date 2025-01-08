@@ -6,10 +6,13 @@ from . import models
 from .database import engine
 from .routers import blog, contact, users
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
-import re
 
 models.Base.metadata.create_all(bind=engine)
+app = FastAPI()
+
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
 
 origins = [
@@ -17,34 +20,17 @@ origins = [
     "http://127.0.0.1:8000",
     "http://localhost:8001",
     "https://blogging-site-frontend.vercel.app",
-    "https://blogging-site-frontend-gf461iusa-jeffetales-projects.vercel.app",
+    "https://blogging-site-frontend-kdv12hxsy-jeffetales-projects.vercel.app"
 ]
-
-# Function to validate origins with regex
-def is_valid_origin(origin: Optional[str]) -> bool:
-    if not origin:
-        return False
-    allowed_patterns = [
-        r"^https://blogging-site-frontend-[a-zA-Z0-9-]+-jeffetales-projects\.vercel\.app$",
-        *[re.escape(o) for o in origins]
-    ]
-    return any(re.match(pattern, origin) for pattern in allowed_patterns)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"], 
+    allow_origins=origins, 
+    allow_credentials=True, 
+    allow_methods=["*"],
+    allow_headers=["*"],
     expose_headers=["*"]
 )
-
-@app.middleware("http")
-async def log_requests(request: Request, call_next):
-    print(f"Received request: {request.method} {request.url}")
-    print(f"Headers: {request.headers}")
-    response = await call_next(request)
-    return response
 
 @app.get("/")
 async def root():

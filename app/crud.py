@@ -62,11 +62,7 @@ async def create_blog_post(
         filename = f"{blog_post.title.replace(' ', '_')}_{user_id}"
         processed_images = await upload_image(image, filename)
 
-        logger.info("Summarizing blog post content")
-        summary = summarize_content(blog_post.content)
-        short_summary = short_summarized_content(blog_post.content)
-
-        # Creating the BlogPost object
+        # Create blog post without summaries first
         db_blog_post = models.BlogPost(
             **blog_post.model_dump(),
             user_id=user_id,
@@ -76,8 +72,6 @@ async def create_blog_post(
             image_public_id_small=f"{filename}_small",
             image_public_id_medium=f"{filename}_medium",
             image_public_id_large=f"{filename}_large",
-            summary=summary,
-            short_summary=short_summary,
         )
 
         # Generate slug before saving
@@ -88,13 +82,32 @@ async def create_blog_post(
         db.commit()
         db.refresh(db_blog_post)
 
-        logger.info(f"Blog post created successfully: id={db_blog_post.id}")
+        # Return the post ID for background processing
         return db_blog_post
 
     except Exception as e:
         logger.error(f"Error in create_blog_post: {str(e)}")
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+        raise
+
+
+async def generate_summaries(db: Session, post_id: int):
+    try:
+        blog_post = get_blog_post(db, post_id)
+        if not blog_post:
+            raise ValueError(f"Blog post {post_id} not found")
+
+        # Generate summaries
+        summary = summarize_content(blog_post.content)
+        short_summary = short_summarized_content(blog_post.content)
+
+        # Update the blog post with summaries
+        blog_post.summary = summary
+        blog_post.short_summary = short_summary
+        db.commit()
+
+    except Exception as e:
+        logger.error(f"Error generating summaries for post {post_id}: {str(e)}")
+        raise
 
 
 def get_blog_post_by_slug(db: Session, slug: str):

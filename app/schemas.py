@@ -36,7 +36,7 @@ class BlogPostInDB(BlogPostBase):
     image_public_id_small: Optional[str] = None
     image_public_id_medium: Optional[str] = None
     image_public_id_large: Optional[str] = None
-    summary: str
+    summary: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -52,8 +52,8 @@ class BlogPost(BlogPostBase):
     image_public_id_medium: Optional[str] = None
     image_public_id_large: Optional[str] = None
     user_id: int
-    summary: str
-    short_summary: str
+    summary: Optional[str] = None
+    short_summary: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -62,8 +62,8 @@ class BlogPost(BlogPostBase):
 class BlogPostSummary(BaseModel):
     id: int
     title: str
-    summary: str
-    short_summary: str
+    summary: Optional[str] = None
+    short_summary: Optional[str] = None
     category: str
     image_url_small: str
     image_url_medium: str
@@ -80,7 +80,7 @@ class BlogPostSummary(BaseModel):
 class PopularBlogPost(BaseModel):
     id: int
     title: str
-    summary: str
+    summary: Optional[str] = None
     category: str
     image_url_medium: str
     image_public_id_medium: Optional[str] = None

@@ -32,11 +32,15 @@ def is_valid_origin(origin: Optional[str]) -> bool:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
-    allow_origin_regex=r"https://blogging-site-frontend-[a-zA-Z0-9-]+-jeffetales-projects\.vercel\.app|http://localhost:3000|http://127.0.0.1:8000|http://localhost:8001|https://blogging-site-frontend\.vercel\.app",
+    allow_origins=[
+        "https://blogging-site-frontend.vercel.app",
+        "http://localhost:3000"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
+    expose_headers=["*"]
+)
 )
 
 @app.get("/")

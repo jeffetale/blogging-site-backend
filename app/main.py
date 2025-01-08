@@ -32,15 +32,19 @@ def is_valid_origin(origin: Optional[str]) -> bool:
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://blogging-site-frontend.vercel.app",
-        "http://localhost:3000"
-    ],
+    allow_origins=origins,  
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_headers=["*"], 
     expose_headers=["*"]
 )
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    print(f"Received request: {request.method} {request.url}")
+    print(f"Headers: {request.headers}")
+    response = await call_next(request)
+    return response
 
 @app.get("/")
 async def root():

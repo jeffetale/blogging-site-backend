@@ -41,7 +41,6 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
     expose_headers=["*"]
 )
-)
 
 @app.get("/")
 async def root():

@@ -8,6 +8,7 @@ from .utils.cloudinary_helper import upload_image, delete_image
 import logging
 from .llm import summarize_content
 from .overview_llm import short_summarized_content
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,69 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+async def upload_profile_image(db: Session, image: UploadFile):
+    try:
+        filename = f"profile_image_{datetime.now().timestamp()}"
+        processed_image = await upload_image(image, filename)
+
+        # Create new profile image record
+        db_image = models.ProfileImage(
+            image_url=processed_image[1]["url"],  # Using medium size
+            image_public_id=f"{filename}_medium",
+        )
+
+        db.add(db_image)
+        db.commit()
+        db.refresh(db_image)
+
+        return db_image
+    except Exception as e:
+        logger.error(f"Error in upload_profile_image: {str(e)}")
+        raise
+
+
+async def set_active_profile_image(db: Session, image_id: int):
+    try:
+        # Set all images to inactive
+        db.query(models.ProfileImage).update({"is_active": False})
+
+        # Set selected image to active
+        image = (
+            db.query(models.ProfileImage)
+            .filter(models.ProfileImage.id == image_id)
+            .first()
+        )
+        if not image:
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        image.is_active = True
+        db.commit()
+
+        return image
+    except Exception as e:
+        logger.error(f"Error in set_active_profile_image: {str(e)}")
+        raise
+
+
+async def delete_profile_image(db: Session, image_id: int):
+    try:
+        image = (
+            db.query(models.ProfileImage)
+            .filter(models.ProfileImage.id == image_id)
+            .first()
+        )
+        if not image:
+            raise HTTPException(status_code=404, detail="Image not found")
+
+        delete_image(image.image_public_id)
+
+        db.delete(image)
+        db.commit()
+        return {"message": "Image deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error in delete_profile_image: {str(e)}")
+        raise
 
 
 def get_user_by_username(db: Session, username: str):

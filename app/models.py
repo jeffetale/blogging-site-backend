@@ -1,6 +1,6 @@
 # app/models.py
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, DateTime, func, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from slugify import slugify
@@ -64,3 +64,14 @@ class ContactMessage(Base):
     message = Column(Text)
     created_at =Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+
+class ProfileImage(Base):
+    __tablename__ = "profile_images"
+    id = Column(Integer, primary_key=True, index=True)
+    image_url = Column(String)
+    image_public_id = Column(String)
+    is_active = Column(Boolean, default=False)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+

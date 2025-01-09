@@ -121,3 +121,22 @@ class User(UserBase):
 
     class Config:
         from_attributes = True
+        
+class ProfileImageBase(BaseModel):
+    image_url: str
+    is_active: bool
+    
+class ProfileImageCreate(ProfileImageBase):
+    pass
+
+class ProfileImage(ProfileImageBase):
+    id: int
+    image_public_id: str
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+    

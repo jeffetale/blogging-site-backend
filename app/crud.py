@@ -202,6 +202,17 @@ def create_contact_message(db: Session, contact_message: schemas.ContactMessageC
     return db_contact_message
 
 
+def get_contact_message(db: Session, message_id: int):
+    contact_message = db.query(models.ContactMessage).filter(models.ContactMessage.id == message_id).first()
+    if not contact_message:
+        raise HTTPException(status_code=404, detail="Contact message not found")
+    return contact_message
+
+
+def get_all_contact_messages(db: Session, skip: int = 0, limit: int = 1000):
+    return db.query(models.ContactMessage).offset(skip).limit(limit).all()
+
+
 def update_view_count(db: Session, post_id: int):
     blog_post = db.query(models.BlogPost).filter(models.BlogPost.id == post_id).first()
     if blog_post:
